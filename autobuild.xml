@@ -81,6 +81,11 @@
               <string>default</string>
             </map>
           </map>
+          <key>manifest</key>
+          <array>
+            <string>include/libpng15/png.h</string>
+            <string>include/libpng15/pngconf.h</string>
+          </array>
           <key>name</key>
           <string>common</string>
         </map>
@@ -101,6 +106,10 @@
               <string>default</string>
             </map>
           </map>
+          <key>manifest</key>
+          <array>
+            <string>lib/release/libpng15.a</string>
+          </array>
           <key>name</key>
           <string>darwin</string>
         </map>

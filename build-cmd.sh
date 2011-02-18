@@ -8,7 +8,7 @@ set -x
 set -e
 
 PNG_VERSION="1.5.1"
-PNG_SOURCE_DIR="libpng-$ZLIB_VERSION"
+PNG_SOURCE_DIR="libpng-$PNG_VERSION"
 
 if [ -z "$AUTOBUILD" ] ; then 
     fail
@@ -45,22 +45,22 @@ pushd "$PNG_SOURCE_DIR"
             cp {zlib.h,zconf.h} "$stage/include/zlib"
         ;;
         "darwin")
-            ./configure --prefix="$stage"
+            ./configure --prefix="$stage" --with-zlib-prefix="$stage/packages"
             make
             make install
-			mkdir -p "$stage/include/libpng"
-			mv "$stage/include/"*.h "$stage/include/libpng/"
+	    mkdir -p "$stage/lib/release"
+	    cp "$stage/lib/libpng15.a" "$stage/lib/release/"
         ;;
         "linux")
-            CFLAGS="-m32" CXXFLAGS="-m32" ./configure --prefix="$stage"
+            CFLAGS="-m32" CXXFLAGS="-m32" ./configure --prefix="$stage/packages" --with-zlib-prefix="$stage/packages"
             make
             make install
-			mkdir -p "$stage/include/libpng"
-			mv "$stage/include/"*.h "$stage/include/libpng/"
+	    mkdir -p "$stage/lib/release"
+	    cp "$stage/lib/libpng15.a" "$stage/lib/release/"
         ;;
     esac
     mkdir -p "$stage/LICENSES"
-    cp LICENSE "$stage/LICENSES/libgpng.txt"
+    cp LICENSE "$stage/LICENSES/libpng.txt"
 popd
 
 pass
