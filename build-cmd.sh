@@ -29,20 +29,14 @@ pushd "$PNG_SOURCE_DIR"
         "windows")
             load_vsvars
             
-            pushd contrib/masmx86
-                ./bld_ml32.bat
-            popd
-            
-            build_sln "contrib/vstudio/vc10/zlibvc.sln" "Debug|Win32" "zlibstat"
-            build_sln "contrib/vstudio/vc10/zlibvc.sln" "Release|Win32" "zlibstat"
+            build_sln "projects/vstudio/vstudio.sln" "Debug Library|Win32" "libpng"
+            build_sln "projects/vstudio/vstudio.sln" "Release Library|Win32" "libpng"
             mkdir -p "$stage/lib/debug"
             mkdir -p "$stage/lib/release"
-            cp "contrib/vstudio/vc10/x86/ZlibStatDebug/zlibstat.lib" \
-                "$stage/lib/debug/zlibd.lib"
-            cp "contrib/vstudio/vc10/x86/ZlibStatRelease/zlibstat.lib" \
-                "$stage/lib/release/zlib.lib"
-            mkdir -p "$stage/include/zlib"
-            cp {zlib.h,zconf.h} "$stage/include/zlib"
+            cp projects/vstudio/Release\ Library/libpng15.lib "$stage/lib/release/libpng15.lib"
+            cp projects/vstudio/Debug\ Library/libpng15.lib "$stage/lib/debug/libpng15.lib"
+            mkdir -p "$stage/include/libpng15"
+            cp {png.h,pngconf.h} "$stage/include/libpng15"
         ;;
         "darwin")
             ./configure --prefix="$stage" --with-zlib-prefix="$stage/packages"

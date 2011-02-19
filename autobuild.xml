@@ -74,8 +74,12 @@
             <map>
               <key>build</key>
               <map>
+                <key>arguments</key>
+                <array>
+                  <string>../build-cmd.sh</string>
+                </array>
                 <key>command</key>
-                <string>../build-cmd.sh</string>
+                <string>bash</string>
               </map>
               <key>name</key>
               <string>default</string>
