@@ -89,6 +89,7 @@
           <array>
             <string>include/libpng15/png.h</string>
             <string>include/libpng15/pngconf.h</string>
+            <string>include/libpng15/pnglibconf.h</string>
           </array>
           <key>name</key>
           <string>common</string>
@@ -154,8 +155,6 @@
               <string>default</string>
             </map>
           </map>
-          <key>name</key>
-          <string>windows</string>
         </map>
       </map>
       <key>version</key>

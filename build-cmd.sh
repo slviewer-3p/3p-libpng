@@ -37,7 +37,7 @@ pushd "$PNG_SOURCE_DIR"
             cp projects/vstudio/Release\ Library/libpng15.lib "$stage/lib/release/libpng15.lib"
             cp projects/vstudio/Debug\ Library/libpng15.lib "$stage/lib/debug/libpng15.lib"
             mkdir -p "$stage/include/libpng15"
-            cp {png.h,pngconf.h} "$stage/include/libpng15"
+            cp {png.h,pngconf.h,pnglibconf.h} "$stage/include/libpng15"
         ;;
         "darwin")
             ./configure --prefix="$stage" --with-zlib-prefix="$stage/packages"
@@ -59,4 +59,3 @@ pushd "$PNG_SOURCE_DIR"
 popd
 
 pass
-
