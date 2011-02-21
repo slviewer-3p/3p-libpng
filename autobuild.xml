@@ -155,6 +155,11 @@
               <string>default</string>
             </map>
           </map>
+          <key>manifest</key>
+          <array>
+            <string>lib/debug/libpng15.lib</string>
+            <string>lib/release/libpng15.lib</string>
+          </array>
         </map>
       </map>
       <key>version</key>
