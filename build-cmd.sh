@@ -29,6 +29,7 @@ pushd "$PNG_SOURCE_DIR"
         "windows")
             load_vsvars
             
+            build_sln "projects/vstudio/vstudio.sln" "Release Library|Win32" "pnglibconf"
             build_sln "projects/vstudio/vstudio.sln" "Debug Library|Win32" "libpng"
             build_sln "projects/vstudio/vstudio.sln" "Release Library|Win32" "libpng"
             mkdir -p "$stage/lib/debug"
