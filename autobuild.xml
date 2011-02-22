@@ -159,6 +159,8 @@
           <array>
             <string>lib/debug/libpng15.lib</string>
             <string>lib/release/libpng15.lib</string>
+            <string>lib/debug/vc100*</string>
+            <string>lib/release/vc100*</string>
           </array>
         </map>
       </map>
