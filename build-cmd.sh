@@ -49,7 +49,7 @@ pushd "$PNG_SOURCE_DIR"
 	    cp "$stage/lib/libpng15.a" "$stage/lib/release/"
         ;;
         "linux")
-            CFLAGS="-m32" CXXFLAGS="-m32" ./configure --prefix="$stage/packages" --with-zlib-prefix="$stage/packages"
+	    CFLAGS="-m32 -I$stage/packages/include -L$stage/packages/lib" CXXFLAGS="-m32 -I$stage/packages/include -L$stage/packages/lib" ./configure --prefix="$stage"
             make
             make install
 	    mkdir -p "$stage/lib/release"
