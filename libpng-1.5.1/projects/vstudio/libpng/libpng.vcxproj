@@ -109,6 +109,7 @@
       <AdditionalDependencies>zlib.lib</AdditionalDependencies>
       <Version>15</Version>
       <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug Library|Win32'">
@@ -167,6 +168,7 @@
       <AdditionalDependencies>zlib.lib</AdditionalDependencies>
       <Version>15</Version>
       <AdditionalLibraryDirectories>$(OutDir)</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release Library|Win32'">
