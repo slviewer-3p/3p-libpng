@@ -49,11 +49,18 @@ pushd "$PNG_SOURCE_DIR"
 	    cp "$stage/lib/libpng15.a" "$stage/lib/release/"
         ;;
         "linux")
-	    CFLAGS="-m32 -I$stage/packages/include -L$stage/packages/lib" CXXFLAGS="-m32 -I$stage/packages/include -L$stage/packages/lib" ./configure --prefix="$stage"
+			# build the release version and link against the release zlib
+			CFLAGS="-m32 -O2 -I$stage/packages/include -L$stage/packages/lib/release" CXXFLAGS="-m32 -O2 -I$stage/packages/include -L$stage/packages/lib/release" ./configure --prefix="$stage" --libdir="$stage/lib/release" --includedir="$stage/include"
             make
             make install
-	    mkdir -p "$stage/lib/release"
-	    cp "$stage/lib/libpng15.a" "$stage/lib/release/"
+
+			# clean the build artifacts
+			make distclean
+
+			# build the debug version and link against the debug zlib
+			CFLAGS="-m32 -O0 -gstabs+ -I$stage/packages/include -L$stage/packages/lib/debug" CXXFLAGS="-m32 -O0 -gstabs+ -I$stage/packages/include -L$stage/packages/lib/debug" ./configure --prefix="$stage" --libdir="$stage/lib/debug" --includedir="$stage/include"
+            make
+            make install
         ;;
     esac
     mkdir -p "$stage/LICENSES"
