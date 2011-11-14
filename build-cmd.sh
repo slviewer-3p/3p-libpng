@@ -50,7 +50,7 @@ pushd "$PNG_SOURCE_DIR"
         ;;
         "linux")
 			# build the release version and link against the release zlib
-			CFLAGS="-m32 -O2 -I$stage/packages/include -L$stage/packages/lib/release" CXXFLAGS="-m32 -O2 -I$stage/packages/include -L$stage/packages/lib/release" ./configure --prefix="$stage" --libdir="$stage/lib/release" --includedir="$stage/include"
+			CFLAGS="-m32 -O3 -I$stage/packages/include -L$stage/packages/lib/release" CXXFLAGS="-m32 -O3 -I$stage/packages/include -L$stage/packages/lib/release" ./configure --prefix="$stage" --libdir="$stage/lib/release" --includedir="$stage/include"
             make
             make install
 
