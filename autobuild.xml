@@ -18,9 +18,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>86f045c2a8881309eedb3d4ca960077f</string>
+              <string>3f0a6ce335f390e3e74bf26d29a07070</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-zlib/rev/249037/arch/Darwin/installer/zlib-1.2.6-darwin-20120207.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-zlib-update/rev/285355/arch/Darwin/installer/zlib-1.2.8-darwin-20140115.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -30,9 +30,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>39797a9e13ece9c05c713b55ee0175f0</string>
+              <string>9c8db7295eca1f357d07e0dd27bf8668</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-zlib/rev/249037/arch/Linux/installer/zlib-1.2.6-linux-20120207.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-zlib-update/rev/285355/arch/Linux/installer/zlib-1.2.8-linux-20140115.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -42,9 +42,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>81ee608ed385b291e4e7af973ec4b021</string>
+              <string>923d08f7a713b1f0f8b855657b074828</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-zlib/rev/249037/arch/CYGWIN/installer/zlib-1.2.6-windows-20120207.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/3p-zlib-update/rev/285355/arch/CYGWIN/installer/zlib-1.2.8-windows-20140115.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -55,7 +55,7 @@
     <key>package_description</key>
     <map>
       <key>copyright</key>
-      <string>Copyright (c) 2004, 2006-2011 Glenn Randers-Pehrson</string>
+      <string>Copyright (c) 2004, 2006-2013 Glenn Randers-Pehrson</string>
       <key>description</key>
       <string>PNG Reference library</string>
       <key>license</key>
@@ -87,9 +87,9 @@
           </map>
           <key>manifest</key>
           <array>
-            <string>include/libpng15/png.h</string>
-            <string>include/libpng15/pngconf.h</string>
-            <string>include/libpng15/pnglibconf.h</string>
+            <string>include/libpng16/png.h</string>
+            <string>include/libpng16/pngconf.h</string>
+            <string>include/libpng16/pnglibconf.h</string>
           </array>
           <key>name</key>
           <string>common</string>
@@ -113,7 +113,10 @@
           </map>
           <key>manifest</key>
           <array>
-            <string>lib/release/libpng15.a</string>
+            <string>lib/release/libpng16.a</string>
+            <string>lib/release/libpng.a</string>
+            <string>lib/debug/libpng16.a</string>
+            <string>lib/debug/libpng.a</string>
           </array>
           <key>name</key>
           <string>darwin</string>
@@ -137,9 +140,9 @@
           </map>
           <key>manifest</key>
           <array>
-            <string>lib/release/libpng15.a</string>
+            <string>lib/release/libpng16.a</string>
             <string>lib/release/libpng.a</string>
-            <string>lib/debug/libpng15.a</string>
+            <string>lib/debug/libpng16.a</string>
             <string>lib/debug/libpng.a</string>
           </array>
           <key>name</key>
@@ -164,15 +167,15 @@
           </map>
           <key>manifest</key>
           <array>
-            <string>lib/debug/libpng15.lib</string>
-            <string>lib/release/libpng15.lib</string>
-            <string>lib/debug/vc100*</string>
-            <string>lib/release/vc100*</string>
+            <string>lib/debug/libpng16.lib</string>
+            <string>lib/debug/libpng16.?db</string>
+            <string>lib/release/libpng16.lib</string>
+            <string>lib/release/libpng16.?db</string>
           </array>
         </map>
       </map>
       <key>version</key>
-      <string>1.5.1</string>
+      <string>1.6.8</string>
     </map>
     <key>type</key>
     <string>autobuild</string>
