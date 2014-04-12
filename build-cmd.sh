@@ -25,6 +25,28 @@ set -x
 
 stage="$(pwd)/stage"
 [ -f "$stage"/packages/include/zlib/zlib.h ] || fail "You haven't installed packages yet."
+
+# Restore all .sos
+restore_sos ()
+{
+    for solib in "${stage}"/packages/lib/{debug,release}/lib*.so*.disable; do 
+        if [ -f "$solib" ]; then
+            mv -f "$solib" "${solib%.disable}"
+        fi
+    done
+}
+
+
+# Restore all .dylibs
+restore_dylibs ()
+{
+    for dylib in "$stage/packages/lib"/{debug,release}/*.dylib.disable; do
+        if [ -f "$dylib" ]; then
+            mv "$dylib" "${dylib%.disable}"
+        fi
+    done
+}
+
 pushd "$PNG_SOURCE_DIR"
     case "$AUTOBUILD_PLATFORM" in
 
@@ -45,7 +67,16 @@ pushd "$PNG_SOURCE_DIR"
         ;;
 
         "darwin")
-            opts="${TARGET_OPTS:--arch i386 -iwithsysroot /Developer/SDKs/MacOSX10.7.sdk -mmacosx-version-min=10.6}"
+            # Select SDK with full path.  This shouldn't have much effect on this
+            # build but adding to establish a consistent pattern.
+            #
+            # sdk=/Developer/SDKs/MacOSX10.6.sdk/
+            # sdk=/Developer/SDKs/MacOSX10.7.sdk/
+            # sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/
+            sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/
+
+            opts="${TARGET_OPTS:--arch i386 -iwithsysroot $sdk -mmacosx-version-min=10.6}"
+
             # Install name for dylibs (if we wanted to build them).
             # The outline of a dylib build is here disabled by '#dylib#' 
             # comments.  The basics:  'configure' won't tolerate an
@@ -60,13 +91,15 @@ pushd "$PNG_SOURCE_DIR"
             target_name="libpng16.16.dylib"
             install_name="@executable_path/../Resources/${target_name}"
 
-            # Force static linkage to libz by moving .dylibs out of the way
-            for dylib in "${stage}"/packages/lib/{debug,release}/*.dylib; do
+            # Force libz static linkage by moving .dylibs out of the way
+            # (Libz is currently packaging only statics but keep this alive...)
+            trap restore_dylibs EXIT
+            for dylib in "$stage"/packages/lib/{debug,release}/libz*.dylib; do
                 if [ -f "$dylib" ]; then
-                    mv -f "$dylib" "$dylib".disable
+                    mv "$dylib" "$dylib".disable
                 fi
             done
-            
+
             # See "linux" section for goals/challenges here...
 
             CFLAGS="$opts -O0 -gdwarf-2 -fPIC" \
@@ -125,16 +158,24 @@ pushd "$PNG_SOURCE_DIR"
 
             # clean the build artifacts
             make distclean
-
-            # Restore libz .dylibs
-            for dylib in "${stage}"/packages/lib/{debug,release}/*.dylib.disable; do
-                if [ -f "$dylib" ]; then
-                    mv -f "$dylib" "${dylib%.disable}"
-                fi
-            done
         ;;
 
         "linux")
+            # Linux build environment at Linden comes pre-polluted with stuff that can
+            # seriously damage 3rd-party builds.  Environmental garbage you can expect
+            # includes:
+            #
+            #    DISTCC_POTENTIAL_HOSTS     arch           root        CXXFLAGS
+            #    DISTCC_LOCATION            top            branch      CC
+            #    DISTCC_HOSTS               build_name     suffix      CXX
+            #    LSDISTCC_ARGS              repo           prefix      CFLAGS
+            #    cxx_version                AUTOBUILD      SIGN        CPPFLAGS
+            #
+            # So, clear out bits that shouldn't affect our configure-directed build
+            # but which do nonetheless.
+            #
+            # unset DISTCC_HOSTS CC CXX CFLAGS CPPFLAGS CXXFLAGS
+
             # Prefer gcc-4.6 if available.
             if [[ -x /usr/bin/gcc-4.6 && -x /usr/bin/g++-4.6 ]]; then
                 export CC=/usr/bin/gcc-4.6
@@ -154,12 +195,14 @@ pushd "$PNG_SOURCE_DIR"
             fi
 
             # Force static linkage to libz by moving .sos out of the way
-            for solib in "${stage}"/packages/lib/{debug,release}/*.so*; do
+            # (Libz is only packaging statics right now but keep this working.)
+            trap restore_sos EXIT
+            for solib in "${stage}"/packages/lib/{debug,release}/libz.so*; do
                 if [ -f "$solib" ]; then
                     mv -f "$solib" "$solib".disable
                 fi
             done
-            
+
             # 1.16 INSTALL claims ZLIBINC and ZLIBLIB env vars are active but this is not so.
             # If you fail to pick up the correct version of zlib (from packages), the build
             # will find the system's version and generate the wrong PNG_ZLIB_VERNUM definition
@@ -204,13 +247,6 @@ pushd "$PNG_SOURCE_DIR"
 
             # clean the build artifacts
             make distclean
-
-            # Restore libz .sos
-            for solib in "${stage}"/packages/lib/{debug,release}/*.so*.disable; do
-                if [ -f "$solib" ]; then
-                    mv -f "$solib" "${solib%.disable}"
-                fi
-            done
         ;;
     esac
     mkdir -p "$stage/LICENSES"

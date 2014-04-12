@@ -20,12 +20,40 @@
          configure such as Makefile, config.*, libpng-config,
          libpng.pc, libpng.vers, libtool, etc.?
 
-    [ ]  Examined pngtest for correct building:
-         * 'stage/bin/pngfix' shows no dynamic linkage to libz.
-         * 'strings stage/bin/pngfix | egrep 1\\.2\\.' shows correct
-          libz.
-
     [ ]  Built PIC on *nix platforms?
+
+    [ ]  Examined pngfix and libraries for correct building.
+
+         * 'stage/bin/pngfix' shows no dynamic linkage to libz:
+
+           $ ldd stage/bin/pngfix 
+             linux-gate.so.1 =>  (0xf7713000)
+             libm.so.6 => /lib32/libm.so.6 (0xf76d7000)
+             libc.so.6 => /lib32/libc.so.6 (0xf7590000)
+             /lib/ld-linux.so.2 (0xf7714000)
+
+         * 'strings stage/bin/pngfix | egrep 1\\.2\\.' shows correct
+           libz and libpng:
+
+           $ strings stage/bin/pngfix | grep 1\\.[0-9]\\.
+           1.6.8
+           1.2.8
+           libpng version 1.6.8 - December 19, 2013
+            libpng version 1.6.8 - December 19, 2013
+            deflate 1.2.8 Copyright 1995-2013 Jean-loup Gailly and Mark Adler 
+            inflate 1.2.8 Copyright 1995-2013 Mark Adler 
+
+         * Libraries have correct versions:
+
+           $ strings stage/lib/release/libpng.a | grep 1\\.[0-9]\\.
+           1.6.8
+           libpng version 1.6.8 - December 19, 2013
+            libpng version 1.6.8 - December 19, 2013
+           1.6.8
+           1.2.8
+           1.6.8
+           1.2.8
+
 
 1.  Introduction
 
@@ -142,6 +170,17 @@
     * lib/release/libpng.a (symlink)
     * lib/debug/libpng16.a
     * lib/debug/libpng.a
+
+
+5.  Known Dependencies
+
+    This is not authoritative, it's just a reminder to followup
+    with dependent packages.
+
+    * openjpeg (*should* be a dependency)
+    * llqtwebkit
+    * SDL
+    * viewer
 
 
 ===================================================================
