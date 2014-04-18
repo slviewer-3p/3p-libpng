@@ -22,3 +22,5 @@ libpng-1.5.1/pnglibconf.h
 libpng-1.5.1/pnglibconf.out
 libpng-1.5.1/scripts/vers.out
 libpng-1.5.1/stamp-h1
+libpng-1.5.1/libpng.sym
+libpng-1.5.1/scripts/sym.out
