@@ -253,4 +253,7 @@ pushd "$PNG_SOURCE_DIR"
     cp -a LICENSE "$stage/LICENSES/libpng.txt"
 popd
 
+mkdir -p "$stage"/docs/libpng/
+cp -a README.Linden "$stage"/docs/libpng/
+
 pass

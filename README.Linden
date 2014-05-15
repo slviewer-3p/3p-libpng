@@ -172,14 +172,17 @@
     * lib/debug/libpng.a
 
 
-5.  Known Dependencies
+5.  Consumers/Dependents
 
-    This is not authoritative, it's just a reminder to followup
-    with dependent packages.
+    Packages dependent on libpng which will need attention
+    (autobuild.xml) after changes.  This is not authoritative, use
+    appropriate build tools to find all dependents.
+
+    * SDL
 
     * openjpeg (*should* be a dependency)
     * llqtwebkit
-    * SDL
+
     * viewer
 
 
