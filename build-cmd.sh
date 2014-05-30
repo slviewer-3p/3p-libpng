@@ -75,7 +75,12 @@ pushd "$PNG_SOURCE_DIR"
             # sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/
             sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/
 
-            opts="${TARGET_OPTS:--arch i386 -iwithsysroot $sdk -mmacosx-version-min=10.6}"
+            # Keeping min version back at 10.5 because we may need to
+            # use this on the 10.5 build machine used for llqtwebkit.
+            # At 10.6, libpng will start using __bzero() which doesn't
+            # exist there.  Once we deal with legacy llqtwebkit, this 
+            # can bump up to 10.6.
+            opts="${TARGET_OPTS:--arch i386 -iwithsysroot $sdk -mmacosx-version-min=10.5}"
 
             # Install name for dylibs (if we wanted to build them).
             # The outline of a dylib build is here disabled by '#dylib#' 
