@@ -131,9 +131,14 @@
 
     2.3  Creaky Mac OSX 10.5
 
-    Min OS level kept at 10.5 for now for compatibility with
-    llqtwebkit builds performed on a 10.5 system.  Without it, we'll
-    get undefined references to __bzero().
+    Mac is still building old llqtwebkit (based on the
+    http://bitbucket.org/lindenlab/3p-llqtwebit repo) on 10.5.  To use
+    this library with a 10.5 build of llqtwebkit, the
+    -mmacosx-version-min must be kept at 10.5 or __bzero() will be
+    used for memset operations.  We'll take the optimistic path for
+    now based on the reborn repo
+    (http://bitbucket.org/monty_linden/llqtwebkit2) which builds on
+    more modern releases.
 
  
 3.  Source Origin
