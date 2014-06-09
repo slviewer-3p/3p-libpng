@@ -129,6 +129,17 @@
     build options for wchar_t, and other things.  Not difficult, but
     it will require some iteration.
 
+    2.3  Creaky Mac OSX 10.5
+
+    Mac is still building old llqtwebkit (based on the
+    http://bitbucket.org/lindenlab/3p-llqtwebit repo) on 10.5.  To use
+    this library with a 10.5 build of llqtwebkit, the
+    -mmacosx-version-min must be kept at 10.5 or __bzero() will be
+    used for memset operations.  We'll take the optimistic path for
+    now based on the reborn repo
+    (http://bitbucket.org/monty_linden/llqtwebkit2) which builds on
+    more modern releases.
+
  
 3.  Source Origin
 
@@ -172,14 +183,17 @@
     * lib/debug/libpng.a
 
 
-5.  Known Dependencies
+5.  Consumers/Dependents
 
-    This is not authoritative, it's just a reminder to followup
-    with dependent packages.
+    Packages dependent on libpng which will need attention
+    (autobuild.xml) after changes.  This is not authoritative, use
+    appropriate build tools to find all dependents.
+
+    * SDL
 
     * openjpeg (*should* be a dependency)
     * llqtwebkit
-    * SDL
+
     * viewer
 
 
@@ -325,7 +339,7 @@ tagged the version 1.0 vendor drop), and then merge the differences
 between the version 1.0 and version 1.1 into our default branch.
 
  $ hg tag -f -r tip current
- $ Optional:  hg tag -r current 1.1
+ $ hg tag -r current 1.1
  $ hg update default
  $ hg merge vendor
  # resolve all the conflicts between their changes and our changes
@@ -348,7 +362,7 @@ like to establish are:
    the 'vendor' branch.  Will almost always be at or close to branch
    head.
 
- * '<version>' Ttag on the 'vendor' branch pointing to a verbatim
+ * '<version>' Tag on the 'vendor' branch pointing to a verbatim
    checkin of a 3rd-party's <version> release.  Example:  '7.21.1' for
    a particular version of libcurl we have used.
 

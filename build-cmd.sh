@@ -75,6 +75,10 @@ pushd "$PNG_SOURCE_DIR"
             # sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk/
             sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk/
 
+            # Keep min version back at 10.5 if you are using the
+            # old llqtwebkit repo which builds on 10.5 systems.
+            # At 10.6, libpng will start using __bzero() which doesn't
+            # exist there.
             opts="${TARGET_OPTS:--arch i386 -iwithsysroot $sdk -mmacosx-version-min=10.6}"
 
             # Install name for dylibs (if we wanted to build them).
@@ -252,5 +256,8 @@ pushd "$PNG_SOURCE_DIR"
     mkdir -p "$stage/LICENSES"
     cp -a LICENSE "$stage/LICENSES/libpng.txt"
 popd
+
+mkdir -p "$stage"/docs/libpng/
+cp -a README.Linden "$stage"/docs/libpng/
 
 pass
