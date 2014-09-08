@@ -7,7 +7,6 @@ set -x
 # make errors fatal
 set -e
 
-PNG_VERSION="1.6.8"
 PNG_SOURCE_DIR="libpng"
 
 if [ -z "$AUTOBUILD" ] ; then 
@@ -46,6 +45,10 @@ restore_dylibs ()
         fi
     done
 }
+
+version=$(perl -ne 's/#define PNG_LIBPNG_VER_STRING "([^"]+)"/$1/ && print' "${PNG_SOURCE_DIR}/png.h")
+build=${AUTOBUILD_BUILD_ID:=0}
+echo "${version}.${build}" > "${stage}/VERSION.txt"
 
 pushd "$PNG_SOURCE_DIR"
     case "$AUTOBUILD_PLATFORM" in
