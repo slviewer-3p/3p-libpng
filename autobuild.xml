@@ -22,11 +22,11 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>bd154960d5b890ce2b8b2920016c3a32</string>
+              <string>049ee5973b11e338fa86c0d15e86d7db</string>
               <key>hash_algorithm</key>
               <string>md5</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/oz-metadata_3p-zlib-update/rev/293854/arch/Darwin/installer/zlib-1.2.8.293854-darwin-293854.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/zlib_3p-update-zlib/rev/293925/arch/Darwin/installer/zlib-1.2.8.293925-darwin-293925.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin</string>
@@ -36,9 +36,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>88a2652f5c7efc1e973708d8c3515767</string>
+              <string>ba68e85c1c32c9e1c8bf57c9e21b3d45</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/oz-metadata_3p-zlib-update/rev/290734/arch/Linux/installer/zlib-1.2.8-linux-290734.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/zlib_3p-update-zlib/rev/293925/arch/Linux/installer/zlib-1.2.8.293925-linux-293925.tar.bz2</string>
             </map>
             <key>name</key>
             <string>linux</string>
@@ -48,16 +48,16 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>a168a1e80284f671d12b2d7f24ddf226</string>
+              <string>e619c19275dc7e6533948bf4e19c949c</string>
               <key>url</key>
-              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/oz-metadata_3p-zlib-update/rev/290734/arch/CYGWIN/installer/zlib-1.2.8-windows-290734.tar.bz2</string>
+              <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/zlib_3p-update-zlib/rev/293925/arch/CYGWIN/installer/zlib-1.2.8.293925-windows-293925.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
           </map>
         </map>
         <key>version</key>
-        <string>1.2.8.293854</string>
+        <string>1.2.8.293925</string>
       </map>
     </map>
     <key>package_description</key>
