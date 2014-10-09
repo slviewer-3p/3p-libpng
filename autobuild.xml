@@ -37,6 +37,8 @@
             <map>
               <key>hash</key>
               <string>ba68e85c1c32c9e1c8bf57c9e21b3d45</string>
+              <key>hash_algorithm</key>
+              <string>md5</string>
               <key>url</key>
               <string>http://automated-builds-secondlife-com.s3.amazonaws.com/hg/repo/zlib_3p-update-zlib/rev/293925/arch/Linux/installer/zlib-1.2.8.293925-linux-293925.tar.bz2</string>
             </map>
@@ -57,7 +59,7 @@
           </map>
         </map>
         <key>version</key>
-        <string>1.2.8.294883</string>
+        <string>1.2.8.293925</string>
       </map>
     </map>
     <key>package_description</key>
