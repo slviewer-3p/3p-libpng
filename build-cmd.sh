@@ -80,7 +80,7 @@ pushd "$PNG_SOURCE_DIR"
             # At 10.6, libpng will start using __bzero() which doesn't
             # exist there.
             opts="${TARGET_OPTS:--arch i386 -iwithsysroot $sdk -mmacosx-version-min=10.7}"
-            export CC=clang
+            export CC=clang++
 
             # Install name for dylibs (if we wanted to build them).
             # The outline of a dylib build is here disabled by '#dylib#' 
