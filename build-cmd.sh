@@ -46,11 +46,18 @@ restore_dylibs ()
     done
 }
 
-# If we leave -x in effect for this next command, it will dump all of png.h
-# into shell trace output...
-set +x
-version="$(expr "$(<libpng/png.h)" : '.*PNG_LIBPNG_VER_STRING \"\([^\"]*\)\"')"
-set -x
+# Unlike grep, expr matches the specified pattern against a string also
+# specified on its command line. So our first use of expr to obtain the
+# version number went like this:
+# expr "$(<libpng/png.h)" ...
+# In other words, dump the entirety of png.h into expr's command line and
+# search that. Unfortunately, png.h is long enough that on some (Linux!)
+# platforms it's too long for the OS to pass. Now we use grep to find the
+# right line, and expr to extract just the version number. Because of that, we
+# state the relevant symbol name twice. Preface it with ".*" because expr
+# implicitly anchors its search to the start of the input string.
+symbol="PNG_LIBPNG_VER_STRING"
+version="$(expr "$(grep "$symbol" libpng/png.h)" : ".*$symbol \"\([^\"]*\)\"")"
 build=${AUTOBUILD_BUILD_ID:=0}
 echo "${version}.${build}" > "${stage}/VERSION.txt"
 
