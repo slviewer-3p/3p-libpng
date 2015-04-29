@@ -46,7 +46,11 @@ restore_dylibs ()
     done
 }
 
-version=$(perl -ne 's/#define PNG_LIBPNG_VER_STRING "([^"]+)"/$1/ && print' "${PNG_SOURCE_DIR}/png.h")
+# If we leave -x in effect for this next command, it will dump all of png.h
+# into shell trace output...
+set +x
+version="$(expr "$(<libpng/png.h)" : '.*PNG_LIBPNG_VER_STRING \"\([^\"]*\)\"')"
+set -x
 build=${AUTOBUILD_BUILD_ID:=0}
 echo "${version}.${build}" > "${stage}/VERSION.txt"
 
