@@ -64,18 +64,20 @@ echo "${version}.${build}" > "${stage}/VERSION.txt"
 pushd "$PNG_SOURCE_DIR"
     case "$AUTOBUILD_PLATFORM" in
 
-        "windows")
+        windows*)
             load_vsvars
             
-            build_sln "projects/vstudio/vstudio.sln" "Release Library|Win32" "pnglibconf"
-            build_sln "projects/vstudio/vstudio.sln" "Debug Library|Win32" "libpng"
-            build_sln "projects/vstudio/vstudio.sln" "Release Library|Win32" "libpng"
-            mkdir -p "$stage/lib/debug"
+            build_sln "projects/vstudio/vstudio.sln" "Release Library|$AUTOBUILD_WIN_VSPLATFORM" "pnglibconf"
+            build_sln "projects/vstudio/vstudio.sln" "Release Library|$AUTOBUILD_WIN_VSPLATFORM" "libpng"
             mkdir -p "$stage/lib/release"
-            cp -a projects/vstudio/Release\ Library/libpng16.lib "$stage/lib/release/libpng16.lib"
-            cp -a projects/vstudio/Release\ Library/libpng16.?db "$stage/lib/release/"
-            cp -a projects/vstudio/Debug\ Library/libpng16.lib "$stage/lib/debug/libpng16.lib"
-            cp -a projects/vstudio/Debug\ Library/libpng16.?db "$stage/lib/debug/"
+            
+            if [ "$AUTOBUILD_ADDRSIZE" = 32 ]
+            then bitdir=projects/vstudio/Release\ Library
+            else bitdir=projects/vstudio/x64/Release\ Library
+            fi
+
+            cp -a "$bitdir/libpng16.lib" "$stage/lib/release/libpng16.lib"
+            cp -a "$bitdir/libpng16.pdb" "$stage/lib/release/"
             mkdir -p "$stage/include/libpng16"
             cp -a {png.h,pngconf.h,pnglibconf.h} "$stage/include/libpng16"
         ;;
