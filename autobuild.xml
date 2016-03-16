@@ -162,8 +162,6 @@
           <array>
             <string>lib/release/libpng16.a</string>
             <string>lib/release/libpng.a</string>
-            <string>lib/debug/libpng16.a</string>
-            <string>lib/debug/libpng.a</string>
           </array>
           <key>name</key>
           <string>darwin</string>
@@ -189,8 +187,6 @@
           <array>
             <string>lib/release/libpng16.a</string>
             <string>lib/release/libpng.a</string>
-            <string>lib/debug/libpng16.a</string>
-            <string>lib/debug/libpng.a</string>
           </array>
           <key>name</key>
           <string>linux</string>

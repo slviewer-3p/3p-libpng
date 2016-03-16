@@ -6,6 +6,8 @@ cd "$(dirname "$0")"
 set -x
 # make errors fatal
 set -e
+# complain about unset env variables
+set -u
 
 PNG_SOURCE_DIR="libpng"
 
@@ -14,16 +16,21 @@ if [ -z "$AUTOBUILD" ] ; then
 fi
 
 if [ "$OSTYPE" = "cygwin" ] ; then
-    export AUTOBUILD="$(cygpath -u $AUTOBUILD)"
+    autobuild="$(cygpath -u $AUTOBUILD)"
+else
+    autobuild="$AUTOBUILD"
 fi
 
 # load autobuild-provided shell functions and variables
 set +x
-eval "$("$AUTOBUILD" source_environment)"
+eval "$("$autobuild" source_environment)"
 set -x
 
+# set LL_BUILD and friends
+set_build_variables convenience Release
+
 stage="$(pwd)/stage"
-[ -f "$stage"/packages/include/zlib/zlib.h ] || fail "You haven't installed packages yet."
+[ -f "$stage"/packages/include/zlib/zlib.h ] || fail "Run 'autobuild install' first."
 
 # Restore all .sos
 restore_sos ()
@@ -82,17 +89,8 @@ pushd "$PNG_SOURCE_DIR"
             cp -a {png.h,pngconf.h,pnglibconf.h} "$stage/include/libpng16"
         ;;
 
-        "darwin")
-            # Select SDK with full path.  This shouldn't have much effect on this
-            # build but adding to establish a consistent pattern.
-            #
-            sdk=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/
-
-            # Keep min version back at 10.5 if you are using the
-            # old llqtwebkit repo which builds on 10.5 systems.
-            # At 10.6, libpng will start using __bzero() which doesn't
-            # exist there.
-            opts="${TARGET_OPTS:--arch i386 -iwithsysroot $sdk -mmacosx-version-min=10.7}"
+        darwin*)
+            opts="${TARGET_OPTS:--arch $AUTOBUILD_CONFIGURE_ARCH $LL_BUILD}"
             export CC=clang++
 
             # Install name for dylibs (if we wanted to build them).
@@ -120,41 +118,12 @@ pushd "$PNG_SOURCE_DIR"
 
             # See "linux" section for goals/challenges here...
 
-            CFLAGS="$opts -O0 -gdwarf-2 -fPIC" \
-                CXXFLAGS="$opts -O0 -gdwarf-2 -fPIC" \
-                CPPFLAGS="$CPPFLAGS -I$stage/packages/include/zlib" \
-                LDFLAGS="-L$stage/packages/lib/debug" \
-                ./configure --prefix="$stage" --libdir="$stage/lib/debug" --with-zlib-prefix="$stage/packages" --enable-shared=no --with-pic
-            make
-            make install
-            #dylib# install_name_tool -id "${install_name}" "${stage}/lib/debug/${target_name}"
-
-            # conditionally run unit tests
-            if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
-                #dylib# mkdir -p ./Resources/
-                #dylib# ln -sf "${stage}"/lib/debug/*.dylib ./Resources/
-
-                make test
-                #dylib# Modify the unit test binaries after-the-fact to point
-                #dylib# to the expected path then run the tests again.
-                #dylib# 
-                #dylib# install_name_tool -change "${stage}/lib/debug/${target_name}" "${install_name}" .libs/pngtest
-                #dylib# install_name_tool -change "${stage}/lib/debug/${target_name}" "${install_name}" .libs/pngstest
-                #dylib# install_name_tool -change "${stage}/lib/debug/${target_name}" "${install_name}" .libs/pngunknown
-                #dylib# install_name_tool -change "${stage}/lib/debug/${target_name}" "${install_name}" .libs/pngvalid
-                #dylib# make test
-
-                #dylib# rm -rf ./Resources/
-            fi
-
-            # clean the build artifacts
-            make distclean
-
-            CFLAGS="$opts -O3 -gdwarf-2 -fPIC" \
-                CXXFLAGS="$opts -O3 -gdwarf-2 -fPIC" \
-                CPPFLAGS="$CPPFLAGS -I$stage/packages/include/zlib" \
+            CFLAGS="$opts" \
+                CXXFLAGS="$opts" \
+                CPPFLAGS="${CPPFLAGS:-} -I$stage/packages/include/zlib" \
                 LDFLAGS="-L$stage/packages/lib/release" \
-                ./configure --prefix="$stage" --libdir="$stage/lib/release" --with-zlib-prefix="$stage/packages" --enable-shared=no --with-pic
+                ./configure --prefix="$stage" --libdir="$stage/lib/release" \
+                            --with-zlib-prefix="$stage/packages" --enable-shared=no --with-pic
             make
             make install
             #dylib# install_name_tool -id "${install_name}" "${stage}/lib/release/${target_name}"
@@ -165,6 +134,9 @@ pushd "$PNG_SOURCE_DIR"
                 #dylib# ln -sf "${stage}"/lib/release/*.dylib ./Resources/
 
                 make test
+                #dylib# Modify the unit test binaries after-the-fact to point
+                #dylib# to the expected path then run the tests again.
+                #dylib# 
                 #dylib# install_name_tool -change "${stage}/lib/release/${target_name}" "${install_name}" .libs/pngtest
                 #dylib# install_name_tool -change "${stage}/lib/release/${target_name}" "${install_name}" .libs/pngstest
                 #dylib# install_name_tool -change "${stage}/lib/release/${target_name}" "${install_name}" .libs/pngunknown
@@ -178,7 +150,7 @@ pushd "$PNG_SOURCE_DIR"
             make distclean
         ;;
 
-        "linux")
+        linux*)
             # Linux build environment at Linden comes pre-polluted with stuff that can
             # seriously damage 3rd-party builds.  Environmental garbage you can expect
             # includes:
@@ -200,11 +172,11 @@ pushd "$PNG_SOURCE_DIR"
                 export CXX=/usr/bin/g++-4.6
             fi
 
-            # Default target to 32-bit
-            opts="${TARGET_OPTS:--m32}"
+            # Default target per AUTOBUILD_ADDRSIZE
+            opts="${TARGET_OPTS:--m$AUTOBUILD_ADDRSIZE $LL_BUILD}"
 
             # Handle any deliberate platform targeting
-            if [ -z "$TARGET_CPPFLAGS" ]; then
+            if [ -z "${TARGET_CPPFLAGS:-}" ]; then
                 # Remove sysroot contamination from build environment
                 unset CPPFLAGS
             else
@@ -227,34 +199,17 @@ pushd "$PNG_SOURCE_DIR"
             # in the build.  Mostly you won't notice until certain things try to run.  So
             # check the generated pnglibconf.h when doing development and confirm it's correct.
             #
-            # The two-pass session below has the effect of:
+            # The sequence below has the effect of:
             # * Producing only static libraries.
             # * Builds all bin/* targets with static libraries.
-            # * Stages the release version of bin/* and include/* over debug.
-
-            # build the debug version and link against the debug zlib
-            CFLAGS="$opts -O0 -g" \
-                CXXFLAGS="$opts -O0 -g" \
-                CPPFLAGS="$CPPFLAGS -I$stage/packages/include/zlib" \
-                LDFLAGS="-L$stage/packages/lib/debug" \
-                ./configure --prefix="$stage" --libdir="$stage/lib/debug" --includedir="$stage/include" --enable-shared=no --with-pic
-            make
-            make install
-
-            # conditionally run unit tests
-            if [ "${DISABLE_UNIT_TESTS:-0}" = "0" ]; then
-                make test
-            fi
-
-            # clean the build artifacts
-            make distclean
 
             # build the release version and link against the release zlib
-            CFLAGS="$opts -O3" \
-                CXXFLAGS="$opts -O3" \
-                CPPFLAGS="$CPPFLAGS -I$stage/packages/include/zlib" \
+            CFLAGS="$opts" \
+                CXXFLAGS="$opts" \
+                CPPFLAGS="${CPPFLAGS:-} -I$stage/packages/include/zlib" \
                 LDFLAGS="-L$stage/packages/lib/release" \
-                ./configure --prefix="$stage" --libdir="$stage/lib/release" --includedir="$stage/include" --enable-shared=no --with-pic
+                ./configure --prefix="$stage" --libdir="$stage/lib/release" \
+                            --includedir="$stage/include" --enable-shared=no --with-pic
             make
             make install
 
