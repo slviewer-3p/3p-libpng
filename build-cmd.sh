@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 cd "$(dirname "$0")"
 
 # turn on verbose debugging output for parabuild logs.
-set -x
+exec 4>&1; export BASH_XTRACEFD=4; set -x
 # make errors fatal
 set -e
 # complain about unset env variables
@@ -12,7 +12,7 @@ set -u
 PNG_SOURCE_DIR="libpng"
 
 if [ -z "$AUTOBUILD" ] ; then 
-    fail
+    exit 1
 fi
 
 if [ "$OSTYPE" = "cygwin" ] ; then
@@ -21,16 +21,15 @@ else
     autobuild="$AUTOBUILD"
 fi
 
-# load autobuild-provided shell functions and variables
-set +x
-eval "$("$autobuild" source_environment)"
-set -x
-
-# set LL_BUILD and friends
-set_build_variables convenience Release
-
 stage="$(pwd)/stage"
-[ -f "$stage"/packages/include/zlib/zlib.h ] || fail "Run 'autobuild install' first."
+
+# load autobuild-provided shell functions and variables
+source_environment_tempfile="$stage/source_environment.sh"
+"$autobuild" source_environment > "$source_environment_tempfile"
+. "$source_environment_tempfile"
+
+[ -f "$stage"/packages/include/zlib/zlib.h ] || \
+{ echo "Run 'autobuild install' first." 1>&2 ; exit 1; }
 
 # Restore all .sos
 restore_sos ()
@@ -90,7 +89,7 @@ pushd "$PNG_SOURCE_DIR"
         ;;
 
         darwin*)
-            opts="${TARGET_OPTS:--arch $AUTOBUILD_CONFIGURE_ARCH $LL_BUILD}"
+            opts="${TARGET_OPTS:--arch $AUTOBUILD_CONFIGURE_ARCH $LL_BUILD_RELEASE}"
             export CC=clang++
 
             # Install name for dylibs (if we wanted to build them).
@@ -173,7 +172,7 @@ pushd "$PNG_SOURCE_DIR"
             fi
 
             # Default target per AUTOBUILD_ADDRSIZE
-            opts="${TARGET_OPTS:--m$AUTOBUILD_ADDRSIZE $LL_BUILD}"
+            opts="${TARGET_OPTS:--m$AUTOBUILD_ADDRSIZE $LL_BUILD_RELEASE}"
 
             # Handle any deliberate platform targeting
             if [ -z "${TARGET_CPPFLAGS:-}" ]; then
@@ -228,5 +227,3 @@ popd
 
 mkdir -p "$stage"/docs/libpng/
 cp -a README.Linden "$stage"/docs/libpng/
-
-pass
