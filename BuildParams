@@ -3,3 +3,7 @@ public_build = true
 
 # Incredibuild should not be used (so pdb information is good)
 USE_INCREDIBUILD=0
+
+# Need viewer-build-variables as well as other shared repositories
+buildscripts_shared_more_NAMEs="build_variables"
+build_variables_repostory_url = "https://bitbucket.org/lindenlab/viewer-build-variables"
