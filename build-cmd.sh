@@ -31,6 +31,12 @@ source_environment_tempfile="$stage/source_environment.sh"
 [ -f "$stage"/packages/include/zlib-ng/zlib.h ] || \
 { echo "Run 'autobuild install' first." 1>&2 ; exit 1; }
 
+# One of makefiles looks for zlib in zlib\zlib.lib
+if [ -d "$stage"/packages/include/zlib ] ; then
+    rm -r "$stage"/packages/include/zlib
+fi
+cp -r "$stage"/packages/include/zlib-ng "$stage"/packages/include/zlib
+
 # Restore all .sos
 restore_sos ()
 {
@@ -119,7 +125,7 @@ pushd "$PNG_SOURCE_DIR"
 
             CFLAGS="$opts" \
                 CXXFLAGS="$opts" \
-                CPPFLAGS="${CPPFLAGS:-} -I$stage/packages/include/zlib-ng" \
+                CPPFLAGS="${CPPFLAGS:-} -I$stage/packages/include/zlib" \
                 LDFLAGS="-L$stage/packages/lib/release" \
                 ./configure --prefix="$stage" --libdir="$stage/lib/release" \
                             --with-zlib-prefix="$stage/packages" --enable-shared=no --with-pic
@@ -205,7 +211,7 @@ pushd "$PNG_SOURCE_DIR"
             # build the release version and link against the release zlib
             CFLAGS="$opts" \
                 CXXFLAGS="$opts" \
-                CPPFLAGS="${CPPFLAGS:-} -I$stage/packages/include/zlib-ng" \
+                CPPFLAGS="${CPPFLAGS:-} -I$stage/packages/include/zlib" \
                 LDFLAGS="-L$stage/packages/lib/release" \
                 ./configure --prefix="$stage" --libdir="$stage/lib/release" \
                             --includedir="$stage/include" --enable-shared=no --with-pic
