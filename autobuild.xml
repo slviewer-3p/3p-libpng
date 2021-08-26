@@ -24,9 +24,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>62114b4f226babc3e8504f6f1db5c99d</string>
+              <string>978934d8ee9fa44cfcbf0fc6952733f9</string>
               <key>url</key>
-              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/86754/800525/zlib_ng-2.0.5.563225-darwin64-563225.tar.bz2</string>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/86979/801678/zlib_ng-2.0.5.563353-darwin64-563353.tar.bz2</string>
             </map>
             <key>name</key>
             <string>darwin64</string>
@@ -36,9 +36,9 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>26e796c7ff2d5eff8f95877164aeb787</string>
+              <string>abbfde54d943fb999db9b98ee5850cb4</string>
               <key>url</key>
-              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/86756/800535/zlib_ng-2.0.5.563225-windows-563225.tar.bz2</string>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/86980/801690/zlib_ng-2.0.5.563353-windows-563353.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows</string>
@@ -48,16 +48,16 @@
             <key>archive</key>
             <map>
               <key>hash</key>
-              <string>ca419f9b5d2991d94b05eee51dc51824</string>
+              <string>b038b8dd39273494668f90cdbfa35332</string>
               <key>url</key>
-              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/86755/800534/zlib_ng-2.0.5.563225-windows64-563225.tar.bz2</string>
+              <string>https://automated-builds-secondlife-com.s3.amazonaws.com/ct2/86981/801689/zlib_ng-2.0.5.563353-windows64-563353.tar.bz2</string>
             </map>
             <key>name</key>
             <string>windows64</string>
           </map>
         </map>
         <key>version</key>
-        <string>2.0.5.563225</string>
+        <string>2.0.5.563353</string>
       </map>
     </map>
     <key>package_description</key>
