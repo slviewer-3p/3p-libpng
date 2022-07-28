@@ -28,8 +28,14 @@ source_environment_tempfile="$stage/source_environment.sh"
 "$autobuild" source_environment > "$source_environment_tempfile"
 . "$source_environment_tempfile"
 
-[ -f "$stage"/packages/include/zlib/zlib.h ] || \
+[ -f "$stage"/packages/include/zlib-ng/zlib.h ] || \
 { echo "Run 'autobuild install' first." 1>&2 ; exit 1; }
+
+# One of makefiles looks for zlib in zlib\zlib.lib
+if [ -d "$stage"/packages/include/zlib ] ; then
+    rm -r "$stage"/packages/include/zlib
+fi
+cp -r "$stage"/packages/include/zlib-ng "$stage"/packages/include/zlib
 
 # Restore all .sos
 restore_sos ()
